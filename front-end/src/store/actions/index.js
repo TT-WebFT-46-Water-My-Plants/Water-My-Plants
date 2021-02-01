@@ -1,8 +1,8 @@
 import axiosWithAuth from "../../utils/axiosWithAuth";
 
-export const FETCH_PLANTS_START = "FETCH_PLANTS_START";
-export const FETCH_PLANTS_SUCCESS = "FETCHPLANTS_SUCCESS";
-export const FETCH_PLANTS_FAIL = "FETACH_PLANTS_FAIL";
+export const FETCH_PLANT_DATA_START = "FETCH_PLANTS_START";
+export const FETCH_PLANT_DATA_SUCCESS = "FETCHPLANTS_SUCCESS";
+export const FETCH_PLANT_DATA_FAIL = "FETACH_PLANTS_FAIL";
 export const ADD_PLANT = "ADD_PLANT";
 export const ADD_PLANT_FAIL = "ADD_PLANT_FAIL";
 export const DELETE_PLANT = "DELETE_PLANT";
@@ -13,14 +13,14 @@ export const EDIT_USER_INFO = "EDIT_USER_INFO";
 export const EDIT_USER_FAIL = "EDIT_USER_FAIL";
 
 export const fetchPlants = (id) => (dispatch) => {
-  dispatch({ type: FETCH_PLANTS_START });
+  dispatch({ type: FETCH_PLANT_DATA_START });
   axiosWithAuth()
     .get("/plants")
     .then((res) => {
-      dispatch({ type: FETCH_PLANTS_SUCCESS, payload: res.data });
+      dispatch({ type: FETCH_PLANT_DATA_SUCCESS, payload: res.data });
     })
     .catch((err) => {
-      dispatch({ type: FETCH_PLANTS_FAIL, payload: err.message });
+      dispatch({ type: FETCH_PLANT_DATA_FAIL, payload: err.message });
     });
 };
 
@@ -68,7 +68,7 @@ export const editPlant = (id, data) => (dispatch) => {
 
 export const editUserInfo = (id, data) => (dispatch) => {
   axiosWithAuth()
-    .put(`/user/${id}`, data)
+    .put(`/users/${id}`, data)
     .then((res) => {
       dispatch({ type: EDIT_USER_INFO, payload: res.data.user });
     })

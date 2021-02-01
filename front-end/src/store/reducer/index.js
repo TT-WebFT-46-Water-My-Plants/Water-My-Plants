@@ -1,7 +1,7 @@
 import {
-  FETCH_PLANTS_FAIL,
-  FETCH_PLANTS_START,
-  FETCH_PLANTS_SUCCESS,
+  FETCH_PLANT_DATA_FAIL,
+  FETCH_PLANT_DATA_START,
+  FETCH_PLANT_DATA_SUCCESS,
   ADD_PLANT,
   ADD_PLANT_FAIL,
   DELETE_PLANT,
@@ -19,20 +19,20 @@ const initialState = {
   error: "",
 };
 
-export const Reducer = (state = initialState, action) => {
+export const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case FETCH_PLANTS_START:
+    case FETCH_PLANT_DATA_START:
       return {
         ...state,
         loading: true,
       };
-    case FETCH_PLANTS_SUCCESS:
+    case FETCH_PLANT_DATA_SUCCESS:
       return {
         ...state,
-        plants: action.payload,
+        plants: [action.payload],
         loading: false,
       };
-    case FETCH_PLANTS_FAIL:
+    case FETCH_PLANT_DATA_FAIL:
       return {
         ...state,
         loading: false,
@@ -42,7 +42,7 @@ export const Reducer = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        plants: action.payload,
+        plants: [...state, action.payload],
       };
     case ADD_PLANT_FAIL:
       return {
@@ -90,3 +90,5 @@ export const Reducer = (state = initialState, action) => {
       return state;
   }
 };
+
+export default reducer;

@@ -4,22 +4,22 @@ import axios from "axios";
 
 import { Link } from "react-router-dom";
 
-import "./Style/signUpStyles.css";
+import "./SignUp.css";
 import * as yup from "yup";
 
+const inititalValues = {
+  username: "",
+  phoneNumber: "",
+  password: "",
+};
+
 function Signup() {
-  const [form, setForm] = useState({
-    username: "",
-    phoneNumber: "",
-    password: "",
-    terms: false,
-  });
+  const [form, setForm] = useState(inititalValues);
 
   const [errors, setErrors] = useState({
     username: "",
     phoneNumber: "",
     password: "",
-    terms: false,
   });
 
   const [disabled, setDisabled] = useState(true);
@@ -61,7 +61,6 @@ function Signup() {
       .string()
       .required("Password is required")
       .min(6, "Password is required and must be at least 6 characters long"),
-    terms: yup.boolean().oneOf([true], ""), //This is where the issue is, (check with Brian)
   });
 
   useEffect(() => {
@@ -74,7 +73,6 @@ function Signup() {
       username: form.username.trim(),
       phoneNumber: form.phoneNumber.trim(),
       password: form.password.trim(),
-      terms: form.terms,
     };
     axios
       .post("/auth/register", newUser)
@@ -82,12 +80,13 @@ function Signup() {
         console.log("Login res: ", res);
 
         localStorage.setItem("token", res.data.token);
-        localStorage.setItem("user_id", res.data.id);
+        localStorage.setItem("user_id", res.data.data.id);
         history.push("/dashboard");
       })
       .catch((err) => {
         console.log(err);
       });
+    setForm(inititalValues);
   };
 
   return (
@@ -133,7 +132,7 @@ function Signup() {
               name="phoneNumber"
               type="tel"
               value={form.phoneNumber}
-              placeholder="Your Email"
+              placeholder="Your Phone Number"
             />
           </label>
           <div style={{ color: "red" }}>{errors.phoneNumber}</div>
@@ -151,23 +150,11 @@ function Signup() {
           </label>
 
           <div style={{ color: "red" }}>{errors.password}</div>
-          <br></br>
-          <label>
-            Terms and Conditions
-            <input
-              className="form-control"
-              onChange={change}
-              name="terms"
-              type="checkbox"
-              value={form.terms}
-              checked={form.terms}
-            />
-          </label>
-          <div style={{ color: "red" }}>{errors.terms}</div>
-          <br></br>
+
+          <br />
           <button
             className="form-control"
-            disabled={disabled}
+            disabled={form.disabled}
             onSubmit={submit}
             type="submit"
           >

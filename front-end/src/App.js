@@ -1,25 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { connect } from "react-redux";
+import Login from "./forms/Login";
+import SignUp from "./forms/SignUp";
+import Home from "./components/Home";
+import Dashboard from "./components/Dashboard";
+import { fetchPlants } from "./store/actions";
+import PrivateRoute from "./components/PrivateRoute";
+
+import "./App.css";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Router>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          {/* <Route path="/login" component={Login} /> */}
+          <Route path="/register" component={SignUp} />
+          <PrivateRoute exact path="/dashboard" component={Dashboard} />
+        </Switch>
+      </Router>
     </div>
   );
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return state;
+};
+
+export default connect(mapStateToProps, { fetchPlants })(App);

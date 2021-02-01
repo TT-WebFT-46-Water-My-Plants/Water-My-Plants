@@ -10,3 +10,5 @@ const defaultConfig = {
 export const axiosWithAuth = (config = defaultConfig) => {
   return axios.create(config);
 };
+
+export default axiosWithAuth;
