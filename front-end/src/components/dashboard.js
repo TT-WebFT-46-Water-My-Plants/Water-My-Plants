@@ -1,19 +1,25 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { fetchPlants } from "../store/actions";
+
 import PlantCard from "./PlantCard";
+import { fetchPlants } from "../store/actions";
 
 const Dashboard = (props) => {
+  console.log(props);
   const { plants } = props;
+
   useEffect(() => {
     props.fetchPlants(localStorage.getItem("user_id"));
   }, []);
 
   return (
-    <div>
+    <div className="posts wrapper">
       <nav>
-        <div>
+        <div className="logo">
+          <h2>Water My Plants</h2>
+        </div>
+        <div className="links">
           <Link to="/PlantForm">
             <button className="navButton" type="button">
               Add Plant
@@ -26,12 +32,22 @@ const Dashboard = (props) => {
           </Link>
         </div>
       </nav>
+      <div>
+        <Link to="/plantform" className="create-new-plant">
+          Create New Plant
+        </Link>
+      </div>
       {plants && plants.length > 0 ? (
         plants.map((item) => {
           return <PlantCard plant={item} key={item.id} />;
         })
       ) : (
-        <p>You have no plants! Please add a plant by clciking add Plant</p>
+        <p>
+          You dont have any
+          <br />
+          Plants being tracked <br />
+          Please add a Plant to track
+        </p>
       )}
     </div>
   );

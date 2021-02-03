@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { connect } from "react-redux";
 
-function Plant() {
-  const [values, setValues] = useState({
-    nickname: "",
-    species: "",
-    h2oFrequency: ""
-  });
+import axiosWithAuth from "../utils/axiosWithAuth";
+import { addPlant } from "../store/actions";
+
+const intialValues = {
+  nickname: "",
+  species: "",
+  h2oFrequency: "",
+};
+
+const PlantForm = (props) => {
+  const [values, setValues] = useState(intialValues);
   const [plants, setPlants] = useState([]);
 
   const history = useHistory();
@@ -15,7 +21,7 @@ function Plant() {
     const newPlant = {
       nickname: values.nickname.trim(),
       species: values.species.trim(),
-      h2oFrequency: values.h2oFrequency
+      h2oFrequency: values.h2oFrequency,
     };
     setPlants(newPlant);
   };
@@ -24,7 +30,7 @@ function Plant() {
     const { name, value } = e.target;
     setValues({
       ...values,
-      [name]: value
+      [name]: value,
     });
   };
 
@@ -32,7 +38,8 @@ function Plant() {
     e.preventDefault();
     addNewPlant();
     console.log(plants);
-    history.push(//push to whatever route goes here)
+    props.addPlant(addNewPlant, history, setValues, intialValues);
+    setValues(intialValues);
   };
 
   console.log("this is plants", plants);
@@ -88,6 +95,12 @@ function Plant() {
       </form>
     </div>
   );
-}
+};
 
-export default Plant;
+const mapStateToProps = (state) => {
+  return {
+    plants: state.plants,
+  };
+};
+
+export default connect(mapStateToProps, { addPlant })(PlantForm);
