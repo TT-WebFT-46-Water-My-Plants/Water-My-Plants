@@ -1,78 +1,73 @@
 import React, { useState } from "react";
 
 function Plant() {
-  const [plant, setPlant] = useState({
+  const [values, setValues] = useState({
     nickname: "",
     species: "",
-    h20Frequency: "",
-    image: "",
+    h2oFrequency: "",
   });
 
-  const submit = (e) => {
-    e.preventDefault();
-    const newPlant = {
-      nickname: plant.nickname,
-      species: plant.species,
-      h20Frequency: plant.h20Frequency,
-      image: plant.image,
-    };
-  };
-  const change = (e) => {
-    setPlant({
-      ...plant,
-      [e.target.name]: e.target.value,
+  const handleChanges = (e) => {
+    const { name, value } = e.target;
+    setValues({
+      ...values,
+      [name]: value,
     });
   };
+
+  const formSubmit = (e) => {
+    e.preventDefault();
+  };
+  console.log(values);
   return (
-    <div className="plant-form">
-      <h2>Add a plant!</h2>
-      <form onSubmit={submit}>
-        <div className="form-input">
-          <label htmlFor="nickname">Give your plant a nickname! </label>
+    <div className="plant-form-container">
+      <h2>This is where the plant form will go</h2>
+      <form className="plant-form" onSubmit={formSubmit}>
+        <div className="plant-inputs">
+          <label className="plant-label" htmlFor="nickname">
+            What is the name of your plant?
+          </label>
           <input
-            id="nickname"
-            type="text"
+            type="string"
             name="nickname"
-            onChange={change}
-            value={plant.nickname}
+            id="nickname"
+            className="plant-input"
+            placeholder="Plant name"
+            onChange={handleChanges}
           />
         </div>
         <br></br>
-        <div className="form-input">
-          <label htmlFor="species">What is the species of your plant? </label>
+        <div className="plant-inputs">
+          <label className="plant-label" htmlFor="species">
+            What species of plant do you have?
+          </label>
           <input
-            id="species"
-            type="text"
+            type="string"
             name="species"
-            onChange={change}
-            value={plant.species}
+            id="species"
+            className="plant-input"
+            placeholder="Plant species"
+            onChange={handleChanges}
           />
         </div>
         <br></br>
-        <div className="form-input">
-          <label htmlFor="h20Frequency">Water frequency? </label>
+        <div className="plant-inputs">
+          <label className="plant-label" htmlFor="h2oFrequency">
+            How often do you need to water your plant?
+          </label>
           <input
-            id="h20Frequency"
-            type="text"
-            name="h20Frequency"
-            onChange={change}
-            value={plant.waterFrequency}
+            type="string"
+            name="h2oFrequency"
+            id="h2oFrequency"
+            className="plant-input"
+            placeholder="How many times a week?"
+            onChange={handleChanges}
           />
         </div>
         <br></br>
-        <div className="form-input">
-          <label htmlFor="image">Add a picture of your plant! </label>
-          <input
-            id="image"
-            type="file"
-            alt="plant-image"
-            accept="image/*,.pdf"
-            onChange={change}
-            value={plant.image}
-          />
-        </div>
-        <br></br>
-        <button>Submit</button>
+        <button className="form-btn" type="submit">
+          Save Your Plant!
+        </button>
       </form>
     </div>
   );
