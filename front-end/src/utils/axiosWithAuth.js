@@ -4,7 +4,7 @@ const defaultConfig = {
   headers: {
     Authorization: localStorage.getItem("token"),
   },
-  baseURL: "http://localhost:5000",
+  baseURL: "http://localhost:2019",
 };
 
 export const axiosWithAuth = (config = defaultConfig) => {
