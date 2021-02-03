@@ -1,24 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 
 function Plant() {
   const [values, setValues] = useState({
     nickname: "",
     species: "",
-    h2oFrequency: "",
+    h2oFrequency: ""
   });
+  const [plants, setPlants] = useState([]);
+
+  const history = useHistory();
+
+  const addNewPlant = (e) => {
+    const newPlant = {
+      nickname: values.nickname.trim(),
+      species: values.species.trim(),
+      h2oFrequency: values.h2oFrequency
+    };
+    setPlants(newPlant);
+  };
 
   const handleChanges = (e) => {
     const { name, value } = e.target;
     setValues({
       ...values,
-      [name]: value,
+      [name]: value
     });
   };
 
   const formSubmit = (e) => {
     e.preventDefault();
+    addNewPlant();
+    console.log(plants);
+    history.push(//push to whatever route goes here)
   };
-  console.log(values);
+
+  console.log("this is plants", plants);
   return (
     <div className="plant-form-container">
       <h2>This is where the plant form will go</h2>
