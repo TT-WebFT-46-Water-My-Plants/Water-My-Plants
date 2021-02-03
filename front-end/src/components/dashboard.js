@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { fetchPlants } from "../store/actions";
-import PlantCard from "../components/PlantCard";
+import PlantCard from "./PlantCard";
 
 const Dashboard = (props) => {
   const { plants } = props;
