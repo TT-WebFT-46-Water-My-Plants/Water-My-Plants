@@ -1,54 +1,55 @@
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useHistory } from "react-router-dom";
 import { connect } from "react-redux";
-
+import { axiosWithAuth } from "../utils/axiosWithAuth";
 import PlantCard from "./PlantCard";
 import { fetchPlants } from "../store/actions";
 
 const Dashboard = (props) => {
-  console.log(props);
-  const { plants } = props;
+  const [userData, setUserData] = useState({});
+  const history = useHistory();
 
+  const logout = () => {
+    localStorage.clear("token");
+    history.push("/");
+  };
   useEffect(() => {
-    props.fetchPlants(localStorage.getItem("user_id"));
+    axiosWithAuth()
+      .get("/users/users")
+      .then((res) => {
+        console.log(res.data);
+        setUserData(res.data);
+      })
+      .catch((err) => {
+        debugger;
+      });
   }, []);
 
   return (
-    <div className="posts wrapper">
+    <div className="dashboard">
       <nav>
-        <div className="logo">
-          <h2>Water My Plants</h2>
-        </div>
-        <div className="links">
-          <Link to="/PlantForm">
-            <button className="navButton" type="button">
-              Add Plant
-            </button>
-          </Link>
-          <Link to="/">
-            <button className="navButton" type="button">
-              Log out
-            </button>
-          </Link>
-        </div>
-      </nav>
-      <div>
-        <Link to="/plantform" className="create-new-plant">
-          Create New Plant
+        <Link to="/">
+          <button onClick={logout}>Log Out</button>
         </Link>
+      </nav>
+      <header>
+        <h2>Hi, {userData.username}</h2>
+        <Link to="/plant-form">
+          <button>Add a Plant</button>
+        </Link>
+      </header>
+      <div className="plant-container">
+        {userData.plants && userData.plants.length > 0 ? (
+          userData.plants.map((plant) => {
+            return <PlantCard plant={plant} key={plant.id} />;
+          })
+        ) : (
+          <p>
+            You dont have any plants to track <br />
+            Please add a plant and check back here later.
+          </p>
+        )}
       </div>
-      {plants && plants.length > 0 ? (
-        plants.map((item) => {
-          return <PlantCard plant={item} key={item.id} />;
-        })
-      ) : (
-        <p>
-          You dont have any
-          <br />
-          Plants being tracked <br />
-          Please add a Plant to track
-        </p>
-      )}
     </div>
   );
 };

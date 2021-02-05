@@ -65,7 +65,7 @@ function Signup() {
 
   useEffect(() => {
     schema.isValid(form).then((valid) => setDisabled(!valid));
-  }, []);
+  }, [form, schema]);
 
   const submit = (e) => {
     e.preventDefault();
@@ -75,22 +75,22 @@ function Signup() {
       password: form.password.trim(),
     };
     axios
-      .post("/auth/register", newUser)
+      .post("/register", newUser)
       .then((res) => {
         console.log("Login res: ", res);
 
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("user_id", res.data.data.id);
-        history.push("/dashboard");
       })
       .catch((err) => {
         console.log(err);
       });
+    history.push("/dashboard");
     setForm(inititalValues);
   };
 
   return (
-    <>
+    <div className="signup">
       <nav>
         <div className="logo">
           <h2>Water My Plants App</h2>
@@ -108,7 +108,7 @@ function Signup() {
           </Link>
         </div>
       </nav>
-      <h2 className="login">Sign up</h2>
+      <h1 className="login">Sign up</h1>
       <div className="signup">
         <form onSubmit={submit}>
           <label>
@@ -154,7 +154,7 @@ function Signup() {
           <br />
           <button
             className="form-control"
-            disabled={form.disabled}
+            disabled={disabled}
             onSubmit={submit}
             type="submit"
           >
@@ -163,12 +163,12 @@ function Signup() {
 
           <br></br>
           <br></br>
-          <Link to="/Login">
+          <Link to="/login">
             <button className="form-control">Already a user?</button>
           </Link>
         </form>
       </div>
-    </>
+    </div>
   );
 }
 

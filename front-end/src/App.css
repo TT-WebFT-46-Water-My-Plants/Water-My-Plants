@@ -32,6 +32,19 @@
   color: #61dafb;
 }
 
+nav{
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+
+}
+nav h2{
+  font-size: 2rem;
+  margin-left:25%;
+  color:darkgreen;
+}
+
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

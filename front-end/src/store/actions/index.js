@@ -1,4 +1,4 @@
-import axiosWithAuth from "../../utils/axiosWithAuth";
+import { axiosWithAuth } from "../../utils/axiosWithAuth";
 
 export const FETCH_PLANT_DATA_START = "FETCH_PLANTS_START";
 export const FETCH_PLANT_DATA_SUCCESS = "FETCHPLANTS_SUCCESS";
@@ -31,7 +31,7 @@ export const addPlant = (
   initialFormValues
 ) => (dispatch) => {
   axiosWithAuth()
-    .post("/plants", newPlant)
+    .post("/plant", newPlant)
     .then((res) => {
       dispatch({ type: ADD_PLANT, payload: res.data });
       history.push("/dashboard");
@@ -68,7 +68,7 @@ export const editPlant = (id, data) => (dispatch) => {
 
 export const editUserInfo = (id, data) => (dispatch) => {
   axiosWithAuth()
-    .put(`/users/${id}`, data)
+    .put(`/user/${id}`, data)
     .then((res) => {
       dispatch({ type: EDIT_USER_INFO, payload: res.data.user });
     })
