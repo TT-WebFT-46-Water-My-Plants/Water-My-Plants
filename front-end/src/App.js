@@ -5,6 +5,8 @@ import Login from "./forms/Login";
 import SignUp from "./forms/SignUp";
 import Home from "./components/Home";
 import Dashboard from "./components/Dashboard";
+import PlantForm from "./forms/PlantForm";
+import UserInfo from "./components/UserInfo";
 import { fetchPlants } from "./store/actions";
 import PrivateRoute from "./components/PrivateRoute";
 
@@ -16,9 +18,10 @@ function App() {
       <Router>
         <Switch>
           <Route exact path="/" component={Home} />
-          {/* <Route path="/login" component={Login} /> */}
+          <Route path="/login" component={Login} />
           <Route path="/register" component={SignUp} />
-          <PrivateRoute exact path="/dashboard" component={Dashboard} />
+          <PrivateRoute path="/dashboard" component={Dashboard} />
+          <PrivateRoute path="/plant-form" component={PlantForm} />
         </Switch>
       </Router>
     </div>

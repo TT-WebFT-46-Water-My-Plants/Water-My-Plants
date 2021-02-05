@@ -1,73 +1,49 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { connect } from "react-redux";
-import { fetchPlants, addPlant } from "../store/actions";
-import PlantList from "./PlantList";
-import PlantForm from "./PlantForm";
+import { Link, useHistory } from "react-router-dom";
+import "../image/plantpic001.jpg";
+import "./Home.css";
 
-const Home = ({ username, id, fetchPlants, addPlant }) => {
-  function useLocalStorage(defaultValue, key) {
-    const [value, setValue] = React.useState(() => {
-      const stickyValue = window.localStorage.getItem(key);
-      return stickyValue !== null ? JSON.parse(stickyValue) : defaultValue;
-    });
-    React.useEffect(() => {
-      window.localStorage.setItem(key, JSON.stringify(value));
-    }, [key, value]);
-    return [value, setValue];
-  }
+function Home(props) {
+  const history = useHistory();
 
-  const [userPlants, setUserPlants] = useState(initialUserPlants);
-  console.log(userPlants);
-
-  const [getUsername] = useLocalStorage(username, "username");
-  const [getId] = useLocalStorage(id, "id");
-
-  //addPlant
-  const plantAdd = (newPlant) => {
-    addPlant(newPlant);
+  const routeToLogin = () => {
+    history.push("/login");
   };
 
-  const plantObj = { setUserPlants, id, getId }; // sort into one object to be passed
-  useEffect(() => {
-    fetchPlants(plantObj); // calls and fetches plant data to be displayed and sorted by the logged in user
-  }, [fetchPlants, plantObj]);
+  const routeToRegister = () => {
+    history.push("/register");
+  };
 
   return (
-    <div>
-      <div className="wrapper">
-        <div className="nav">
-          Nav Bar
-          <button>log out</button>
-        </div>
-        <section className="sidebar">
-          <div className="profile box">
-            <div>
-              <h2>Profile</h2>
-            </div>
-            <div> Hello {getUsername}!</div>
-            <div className="profile-pic">
-              <p className="avatar fa fa-user"></p>
-            </div>
+    <div className="Home-wrapper">
+      <div className="Left-side">
+        <div className="text-container">
+          <h1>Water My Plants</h1>
+          <p>
+            NEVER FORGET WHEN IT'S TIME TO <br />
+            FEED YOUR FOLIAGE AND QUENCH <br />
+            YOUR PLANTS' THIRST.
+          </p>
+          <div className="btn-container">
+            <Link to="login">
+              <button onClick={routeToLogin}>LOG IN</button>
+            </Link>
+            <Link to="register">
+              <button onClick={routeToRegister}>SIGN UP</button>
+            </Link>
           </div>
-          <div className="addPlant box">
-            {/* Add Plant */}
-            <PlantForm plantAdd={plantAdd} id={getId} />
-          </div>
-        </section>
-        <div className="plants box">
-          {/* Plants */}
-          <PlantList plants={userPlants} />
         </div>
       </div>
+      <div className="Right-side"></div>
     </div>
   );
-};
+}
 
 const mapStateToProps = (state) => {
   return {
-    username: state.username,
-    id: state.id,
+    state,
   };
 };
 
-export default connect(mapStateToProps, { fetchPlants, addPlant })(Home);
+export default connect(mapStateToProps, {})(Home);

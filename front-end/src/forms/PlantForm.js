@@ -1,41 +1,79 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { connect } from "react-redux";
+import * as yup from "yup";
+import { addPlant } from "../store/actions";
 
-function Plant() {
-  const [values, setValues] = useState({
-    nickname: "",
-    species: "",
-    h2oFrequency: ""
-  });
-  const [plants, setPlants] = useState([]);
+const intialValues = {
+  nickname: "",
+  species: "",
+  h2oFrequency: "",
+};
+
+const intialErrorValues = {
+  nickname: "",
+  species: "",
+  h2oFrequency: "",
+};
+
+const initialDisabled = true;
+
+const PlantForm = (props) => {
+  const [errors, setErrors] = useState(intialErrorValues);
+  const [values, setValues] = useState(intialValues);
+  const [disabled, setDisabled] = useState(initialDisabled);
 
   const history = useHistory();
 
-  const addNewPlant = (e) => {
-    const newPlant = {
-      nickname: values.nickname.trim(),
-      species: values.species.trim(),
-      h2oFrequency: values.h2oFrequency
-    };
-    setPlants(newPlant);
+  const formSchema = yup.object().shape({
+    nickname: yup.string().required("Plant reqiures a nickname"),
+    spiecies: yup.string().required("Plant reqiures a spiecies"),
+    h2oFrequency: yup.string().required("Plant requires a h2oFrequency"),
+  });
+
+  const formErrors = (name, value) => {
+    yup
+      .reach(formSchema, name)
+      .validate(value)
+      .then(() => {
+        setErrors({
+          ...errors,
+          [name]: "",
+        });
+      })
+      .catch((err) => {
+        setErrors({
+          ...errors,
+          [name]: err.errors[0],
+        });
+      });
   };
 
   const handleChanges = (e) => {
     const { name, value } = e.target;
     setValues({
       ...values,
-      [name]: value
+      [name]: value,
     });
   };
 
   const formSubmit = (e) => {
     e.preventDefault();
-    addNewPlant();
-    console.log(plants);
-    history.push(//push to whatever route goes here)
+    const newPlant = {
+      nickname: values.nickname.trim(),
+      species: values.species.trim(),
+      h2oFrequency: values.h2oFrequency.trim(),
+    };
+
+    console.log("New Plant: ", newPlant);
+    props.addPlant(newPlant, history, setValues, intialValues);
+    setValues(intialValues);
   };
 
-  console.log("this is plants", plants);
+  useEffect(() => {
+    formSchema.isValid(values).then((valid) => setDisabled(!valid));
+  }, [formSchema, values]);
+
   return (
     <div className="plant-form-container">
       <h2>This is where the plant form will go</h2>
@@ -52,6 +90,7 @@ function Plant() {
             placeholder="Plant name"
             onChange={handleChanges}
           />
+          <div style={{ color: "red" }}>{errors.nickname}</div>
         </div>
         <br></br>
         <div className="plant-inputs">
@@ -66,6 +105,7 @@ function Plant() {
             placeholder="Plant species"
             onChange={handleChanges}
           />
+          <div style={{ color: "red" }}>{errors.species}</div>
         </div>
         <br></br>
         <div className="plant-inputs">
@@ -80,14 +120,26 @@ function Plant() {
             placeholder="How many times a week?"
             onChange={handleChanges}
           />
+          <div style={{ color: "red" }}>{errors.h2oFrequency}</div>
         </div>
         <br></br>
-        <button className="form-btn" type="submit">
+        <button
+          className="form-btn"
+          type="submit"
+          disabled={props.disabled}
+          onSubmit={formSubmit}
+        >
           Save Your Plant!
         </button>
       </form>
     </div>
   );
-}
+};
 
-export default Plant;
+const mapStateToProps = (state) => {
+  return {
+    plants: state.plants,
+  };
+};
+
+export default connect(mapStateToProps, { addPlant })(PlantForm);

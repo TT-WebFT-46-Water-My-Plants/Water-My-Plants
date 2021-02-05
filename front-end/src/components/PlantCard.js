@@ -1,16 +1,35 @@
 import React, { useState } from "react";
-import { deletePlant } from "../store/actions";
+import { useHistory } from "react-router-dom";
+import { deletePlant, editPlant } from "../store/actions";
 import { connect } from "react-redux";
-import EditPlant from "../forms/EditPlant";
 
-const PlantCard = ({ plant, removePlant }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [update, setUpdate] = useState(false);
+const initialPlant = {
+  nickname: "",
+  species: "",
+  h2oFrquency: "",
+};
+const PlantCard = (props) => {
+  const [editing, setEditing] = useState(false);
+  const [plantToEdit, setPlantToEdit] = useState(initialPlant);
+  const history = useHistory();
 
-  const { nickname, species, h2o_frequency, image_url, id } = plant;
+  const { nickname, species, h2o_frequency, image_url, id } = props.plant;
 
-  const plantDelete = () => {
-    deletePlant(id);
+  const plantEdit = (edit) => {
+    setEditing(true);
+    setPlantToEdit(id);
+  };
+
+  const plantDelete = (e) => {
+    e.preventDefault();
+    props.deletePlant(id);
+    history.push("/dashboard");
+  };
+
+  const save = (e) => {
+    e.preventDefault();
+    props.editPlant(id, plantToEdit);
+    history.push("/edited");
   };
 
   return (
@@ -28,23 +47,15 @@ const PlantCard = ({ plant, removePlant }) => {
           </p>
         </div>
         <div className="button-wrapper">
-          <button
-            className="fa fa-edit"
-            onClick={() => setIsOpen(true)}
-          ></button>
-          <EditPlant
-            open={isOpen}
-            onClose={() => setIsOpen(false)}
-            plant={plant}
-            update={setUpdate}
-          >
-            Plant Edit Form
-          </EditPlant>
+          <button classNAme="fa fa-edit" onClick={(e) => plantEdit(e)}></button>
         </div>
         <button
           className="fa fa-trash"
           onclick={(e) => plantDelete(e)}
         ></button>
+        <button className="save btn" type="submit">
+          Save
+        </button>
       </div>
     </div>
   );
@@ -53,4 +64,4 @@ const PlantCard = ({ plant, removePlant }) => {
 const mapStateToProps = (state) => {
   return state;
 };
-export default connect(mapStateToProps, { deletePlant })(PlantCard);
+export default connect(mapStateToProps, { deletePlant, editPlant })(PlantCard);

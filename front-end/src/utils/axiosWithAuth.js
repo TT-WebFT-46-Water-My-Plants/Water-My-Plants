@@ -1,14 +1,12 @@
 import axios from "axios";
 
-const defaultConfig = {
-  headers: {
-    Authorization: localStorage.getItem("token"),
-  },
-  baseURL: "http://localhost:5000",
-};
+export const axiosWithAuth = () => {
+  const token = window.localStorage.getItem("token");
 
-export const axiosWithAuth = (config = defaultConfig) => {
-  return axios.create(config);
+  return axios.create({
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    baseURL: "https://watermyplants-tt46.herokuapp.com",
+  });
 };
-
-export default axiosWithAuth;
